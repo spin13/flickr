@@ -6,7 +6,9 @@ from time import sleep
 
 
 def to_url(json_data):
-    return 'https://farm%s.staticflickr.com/%s/%s_%s.jpg' % (i['farm'], i['server'], i['id'], i['secret'])
+    print(json_data)
+    print("#####################")
+    return 'https://farm%s.staticflickr.com/%s/%s_%s.jpg' % (json_data['farm'], json_data['server'], json_data['id'], json_data['secret'])
 
 
 def get_picts(word='', N=1, sort_algo=''):
@@ -17,11 +19,11 @@ def get_picts(word='', N=1, sort_algo=''):
         'per_page': N,
         'format': 'json',
         'nojsoncallback': 1,
-        'api_key': env.API_KEY,
+        'api_key': env.FLICKR_API_KEY,
         'method': 'flickr.photos.search',
         'text': word
     }
-    url = env.API_BASE
+    url = env.FLICKR_API_BASE
     res = requests.get(url, params=opts)
     return res.json()['photos']['photo']
 
@@ -45,6 +47,10 @@ def random_url():
         'date-posted-desc', 'date-taken-desc', 'interestingness-desc', 'relevance'
     ]
 
-    res = get_picts(word=random.choice(words), N=100, sort_algo=random.choice(algos))
-    return to_url(random.choice(res))
+    res = get_picts(word=random.choice(words), N=10, sort_algo=random.choice(algos))
+    ret = to_url(random.choice(res))
+    if ret == 'https://farm7.staticflickr.com/6168/6153055212_a4c67ef37c.jpg':
+        ret = to_url(random.choice(res))
+    
+    return ret
 
